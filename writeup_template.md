@@ -88,10 +88,11 @@ I was short on time so I chose to use the Udacity dataset rather than recording 
 
 My next realization was that the network was producing a constant output regardless of which image was being used for prediction, this is also seen when it seems to settle on the same loss and validation loss within 2 epochs. I further filtered out images that were less than +-0.05 steering angles along with increasing the number of samples of larger steering angles by flipping images >0.1 and <-0.1. This produced a car that continuously turned left as I ran it in the simulator. 
 
-Next I applied the VGG16 network and retrained it from scratch, the car was able to drive around the track, swirving from left to right. However it did manage to drive around the track when I manually reduce the speed, I'm suspecting it's got to do with the network speed or the efficiency of the model, likely the latter. The model.h5 file is over 1 gigabyte.  
+Next I applied the VGG16 network and retrained it from scratch, the car was able to drive around the track, swirving from left to right. However it did manage to drive around the track when I manually reduce the speed, I'm suspecting it's got to do with the network speed or the efficiency of the model, likely the latter. The model.h5 file is over 1 gigabyte. After updating the drive.py from the udacity repo and setting the speed to 5mph the car was able to make it over the bridge and keep going, my laptop was heating up quite bad from running the simulator though. 
 
+Trying to reduce the size of the model by using a lambda calling tensor flow as a part of the model turned out to be troublesome, the model trained ok but I couldn't load it as it encountered an undefined function in the lambda. Tried reducing the image to 80x80 but the result was worse, it turns out the default learning rate needed to be lower for the model to learn the smaller images. I set the learning rate at 0.0001 and the car was able to go around track 1 at 15mph. 
 
-
+I observed that the car is still swirving a lot with this model, so I added in the left and right camera images into the training sample. This made the car a lot more stable at 15mph. 
 
 
 My first step was to use a convolution neural network model similar to the ... I thought this model might be appropriate because ...
@@ -141,3 +142,11 @@ After the collection process, I had X number of data points. I then preprocessed
 I finally randomly shuffled the data set and put Y% of the data into a validation set. 
 
 I used this training data for training the model. The validation set helped determine if the model was over or under fitting. The ideal number of epochs was Z as evidenced by ... I used an adam optimizer so that manually training the learning rate wasn't necessary.
+
+
+# References
+CarND forums and slack channel  
+VGG paper: https://arxiv.org/pdf/1409.1556.pdf  
+Nvidia paper: https://arxiv.org/pdf/1604.07316v1.pdf  
+Keras documentation: https://keras.io  
+Vivek's post:  https://chatbotslife.com/using-augmentation-to-mimic-human-driving-496b569760a9   
