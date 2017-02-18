@@ -78,7 +78,21 @@ For details about how I created the training data, see the next section.
 
 ####1. Solution Design Approach
 
-The overall strategy for deriving a model architecture was to ...
+The overall strategy for deriving a model architecture was to predict steering angle for the car in the simulator while throttle remained constant. 
+
+My initial work was to try recording a short trip down the initial straight road so I could analyze and visualize the image and work on the data preparation. 
+
+My first attempt on training was to just migrate the traffic sign network from the Keras lab and see what happens. It took me a while to connect my local simulator to a model that was running in AWS and get the car moving in autonomous mode. 
+
+I was short on time so I chose to use the Udacity dataset rather than recording my own. First few training attempts the model would produce a steering angle in the hundreds. I decided to remove all zero steering angles and this help to produce a normal output between -1 and 1. During this process I also learnt that for a continuous prediction I should remove the last activation layer which is typically used in classification networks. 
+
+My next realization was that the network was producing a constant output regardless of which image was being used for prediction, this is also seen when it seems to settle on the same loss and validation loss within 2 epochs. I further filtered out images that were less than +-0.05 steering angles along with increasing the number of samples of larger steering angles by flipping images >0.1 and <-0.1. This produced a car that continuously turned left as I ran it in the simulator. 
+
+Next I applied the VGG16 network and retrained it from scratch, the car was able to drive around the track, swirving from left to right. However it did manage to drive around the track when I manually reduce the speed, I'm suspecting it's got to do with the network speed or the efficiency of the model, likely the latter. The model.h5 file is over 1 gigabyte.  
+
+
+
+
 
 My first step was to use a convolution neural network model similar to the ... I thought this model might be appropriate because ...
 
