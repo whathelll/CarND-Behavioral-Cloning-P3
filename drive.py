@@ -47,15 +47,13 @@ class SimplePIController:
 
 
 controller = SimplePIController(0.1, 0.002)
-set_speed = 15
+set_speed = 20
 controller.set_desired(set_speed)
-#previous_steer = 0
 
 @sio.on('telemetry')
 def telemetry(sid, data):
     if data:
         t = time.time()
-        #global previous_steer
         
         # The current steering angle of the car
         steering_angle = data["steering_angle"]
@@ -72,9 +70,6 @@ def telemetry(sid, data):
         image_array = cv.cvtColor(image_array, cv.COLOR_RGB2YUV)
         image_array = cv.resize(image_array, (64, 64), interpolation=cv.INTER_AREA)
         steering_angle = float(model.predict(image_array[None, :, :, :], batch_size=1))
-        
-        #steering_angle = (previous_steer + steering_angle)/2
-        #previous_steer = steering_angle
 
         throttle = controller.update(float(speed))
 
