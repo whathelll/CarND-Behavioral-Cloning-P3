@@ -1,6 +1,7 @@
 import argparse
 import base64
 from datetime import datetime
+import time
 import os
 import shutil
 
@@ -46,13 +47,16 @@ class SimplePIController:
 
 
 controller = SimplePIController(0.1, 0.002)
-set_speed = 12
+set_speed = 15
 controller.set_desired(set_speed)
-
+#previous_steer = 0
 
 @sio.on('telemetry')
 def telemetry(sid, data):
     if data:
+        t = time.time()
+        #global previous_steer
+        
         # The current steering angle of the car
         steering_angle = data["steering_angle"]
         # The current throttle of the car
@@ -63,12 +67,18 @@ def telemetry(sid, data):
         imgString = data["image"]
         image = Image.open(BytesIO(base64.b64decode(imgString)))
         image_array = np.asarray(image)
-        image_array = cv.resize(image_array, (80, 80), interpolation=cv.INTER_AREA)
+        image_array = image_array[50:130,0:320]
+        #image_array = image_array[30:160,0:320]
+        image_array = cv.cvtColor(image_array, cv.COLOR_RGB2YUV)
+        image_array = cv.resize(image_array, (64, 64), interpolation=cv.INTER_AREA)
         steering_angle = float(model.predict(image_array[None, :, :, :], batch_size=1))
+        
+        #steering_angle = (previous_steer + steering_angle)/2
+        #previous_steer = steering_angle
 
         throttle = controller.update(float(speed))
 
-        print(steering_angle, throttle)
+        print(steering_angle, throttle, "{:.3f}".format(time.time() - t))
         send_control(steering_angle, throttle)
 
         # save frame
