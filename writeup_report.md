@@ -249,7 +249,7 @@ I tried random brightness adjustment and image transformations as used by Vivek 
 
 I used a generator for training which will generate randomly provided samples which is the outcome of all of the above mentioned augmentation and preprocessing.
 
-My training parameters:  
+**My training parameters:**  
 Learning rate = 0.00001
 Optimizer = adam  
 Error measurement = Mean Squared Error  
