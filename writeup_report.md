@@ -262,7 +262,7 @@ For validation I used a separate generator which randomly samples the original d
 # Lessons learnt
 1. Activations are important and Keras by default use a simple f(x) -> x
 2. Data quality is very important. Should have tried recording my own driving for more data points.
-3. Model complexity and impacts, my first VGG model was 1.2GB, that was before resizing my input. In the end I was still able to achieve good results with a simpler and more shallow convolution layers.
+3. Model complexity and impacts, my first VGG model was 1.2GB and training took a long time, that was before resizing my input. In the end I was still able to achieve good results with a simpler and more shallow convolution layers.
 4. Data augmentation techniques
 5. The difference between classification and continuous prediction
 6. Learnt a bit more about Elu, dropouts and the Nvidia approach
