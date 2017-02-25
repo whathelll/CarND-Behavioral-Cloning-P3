@@ -259,11 +259,19 @@ Samples per Epoch = 256*40
 
 For validation I used a separate generator which randomly samples the original data.
 
+# Lessons learnt
+1. Activations are important and Keras by default use a simple f(x) -> x
+2. Data quality is very important. Should have tried recording my own driving for more data points.
+3. Model complexity and impacts, my first VGG model was 1.2GB, that was before resizing my input. In the end I was still able to achieve good results with a simpler and more shallow convolution layers.
+4. Data augmentation techniques
+5. The difference between classification and continuous prediction
+6. Learnt a bit more about Elu, dropouts and the Nvidia approach
+7. Much more comfortable with Keras compared to before
 
 # References
 CarND forums and slack channel  
 VGG paper: https://arxiv.org/pdf/1409.1556.pdf  
 Nvidia paper: https://arxiv.org/pdf/1604.07316v1.pdf  
 Keras documentation: https://keras.io  
-Vivek's post:  https://chatbotslife.com/using-augmentation-to-mimic-human-driving-496b569760a9
+Vivek's post:  https://chatbotslife.com/using-augmentation-to-mimic-human-driving-496b569760a9  
 Simultor: https://github.com/udacity/self-driving-car-sim
