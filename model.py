@@ -17,6 +17,7 @@ from keras.layers import Cropping2D, Lambda, Input, ELU
 from keras.layers.core import Activation, Dense, Flatten, Dropout
 from keras.layers.convolutional import Convolution2D
 from keras.layers.pooling import MaxPooling2D, AveragePooling2D
+from keras.layers.normalization import BatchNormalization
 from keras.optimizers import Adam
 from keras.applications.vgg16 import VGG16
 
@@ -27,7 +28,7 @@ class MyModel():
         self.batch_size=batch_size
         self.nb_epoch=nb_epoch
         
-        model = self.custom_VGG()
+        model = self.nvidia()
         model.summary()
         
         self.model = model
@@ -96,18 +97,43 @@ class MyModel():
     def nvidia(self):
         model = Sequential()
         model.add(Lambda(lambda x: (x / 255.0) - 0.5, input_shape=(self.image_size_x, self.image_size_y,3)))
-        model.add(Convolution2D(24, 3, 3, subsample=(2, 2), border_mode="same", activation='relu'))
-        model.add(Convolution2D(36, 3, 3, subsample=(2, 2), border_mode="same", activation='relu'))
-        model.add(Convolution2D(48, 3, 3, subsample=(2, 2), border_mode="same", activation='relu'))
-        model.add(Convolution2D(64, 3, 3, subsample=(1, 1), border_mode="same", activation='relu'))
-        model.add(Convolution2D(64, 3, 3, subsample=(1, 1), border_mode="same", activation='relu'))
-        model.add(Convolution2D(128, 3, 3, subsample=(1, 1), border_mode="same", activation='relu'))
-        model.add(Convolution2D(128, 3, 3, subsample=(1, 1), border_mode="same", activation='relu'))
+        model.add(Convolution2D(24, 3, 3, subsample=(2, 2), border_mode="same"))
+        model.add(BatchNormalization())
+        model.add(Activation('relu'))
+        model.add(Dropout(0.25))
+        model.add(Convolution2D(36, 3, 3, subsample=(2, 2), border_mode="same"))
+        model.add(BatchNormalization())
+        model.add(Activation('relu'))
+        model.add(Dropout(0.25))
+        model.add(Convolution2D(48, 3, 3, subsample=(2, 2), border_mode="same"))
+        model.add(BatchNormalization())
+        model.add(Activation('relu'))
+        model.add(Dropout(0.25))
+        model.add(Convolution2D(64, 3, 3, subsample=(1, 1), border_mode="same"))
+        model.add(BatchNormalization())
+        model.add(Activation('relu'))
+        model.add(Dropout(0.25))
+        model.add(Convolution2D(64, 3, 3, subsample=(1, 1), border_mode="same"))
+        model.add(BatchNormalization())
+        model.add(Activation('relu'))
+        model.add(Dropout(0.25))
+        model.add(Convolution2D(128, 3, 3, subsample=(1, 1), border_mode="same"))
+        model.add(BatchNormalization())
+        model.add(Activation('relu'))
+        model.add(Dropout(0.25))
+        model.add(Convolution2D(128, 3, 3, subsample=(1, 1), border_mode="same"))
+        model.add(BatchNormalization())
+        model.add(Activation('relu'))
+        model.add(Dropout(0.25))
         model.add(Flatten())
-        model.add(Dense(4096, activation='relu'))
-        model.add(Dense(1164, activation='relu'))
-        model.add(Dense(100, activation='relu'))
-        model.add(Dense(50, activation='relu'))
+        model.add(Dense(4096))
+        model.add(Activation('relu'))
+        model.add(Dense(1164))
+        model.add(Activation('relu'))
+        model.add(Dense(100))
+        model.add(Activation('relu'))
+        model.add(Dense(50))
+        model.add(Activation('relu'))
         model.add(Dense(10, activation='relu'))
         model.add(Dense(1))
         adam = Adam(lr=0.0001)
@@ -211,8 +237,8 @@ class MyModel():
     def train_with_generator(self):
         self.model.fit_generator(self.train_generator, 
                                  validation_data=self.validation_generator, 
-                                 nb_val_samples=self.batch_size*8, 
-                                 samples_per_epoch= self.batch_size*40, nb_epoch=self.nb_epoch)
+                                 validation_steps=8,
+                                 steps_per_epoch=40, epochs=self.nb_epoch)
         
     """
         save the model file
